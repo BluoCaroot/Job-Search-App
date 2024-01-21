@@ -5,7 +5,7 @@ const app = express()
 config({path: 'config/dev.env'})
 const port = process.env.PORT
 
-
+app.use(express.json())
 db_connection()
 
 
