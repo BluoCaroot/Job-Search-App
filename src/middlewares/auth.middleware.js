@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import User from '../../DB/models/users.models.js'
+import User from '../../DB/models/user.model.js'
 
 export const auth = ()=>
 {

@@ -17,8 +17,7 @@ const userSchema = new Schema(
     },
     userName:
     {
-        type: String,
-        set: this.userName + ' ' + this.lastName
+        type: String
     },
     email:
     {
