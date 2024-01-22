@@ -74,17 +74,36 @@ export const updateUser = async (req, res, next) =>
         const duplicateNumber = await User.findOne({mobileNumber})
         if (duplicateNumber)
             return next(new Error('Phone number already exists', {cause: 409}))
-        user.mobileNumber = mobileNumber
+            user.mobileNumber = mobileNumber
     }
     user.firstName = firstName ? firstName : user.firstName
     user.lastName = lastName ? lastName : user.lastName
     user.dateOfBirth = dateOfBirth ? dateOfBirth : user.dateOfBirth
     user.recoveryEmail = recoveryEmail ? recoveryEmail : user.recoveryEmail
     await user.save()
-
+    
     res.status(200).json({message: "user updated successfully", user})
 }
 
+export const changePassword = async (req, res, next) =>
+{
+    const {user} = req
+    const {password, oldPassword, id} = req.body
+
+    if (user._id.toString() != id)
+        return next(new Error('Missing permissions to edit', {cause: 400}))
+
+
+    const isPasswordCorrect = bcrypt.compareSync(oldPassword, user.password)
+
+    if (!isPasswordCorrect)
+        return next(new Error('Incorrect password', {cause: 400}))
+
+    user.password = bcrypt.hashSync(password, +process.env.SALT_ROUNDS)
+    await user.save()
+    res.status(200).json({message: "password changed successfully"})
+}
+    
 export const deleteUser = async (req, res, next) =>
 {
     const {user} = req
@@ -102,3 +121,42 @@ export const deleteUser = async (req, res, next) =>
     res.status(200).json({message: "user deleted successfully"})
 }
 
+export const getUserData = async (req, res, next) =>
+{
+    const {user} = req
+    const {id} = req.params
+
+    if (user._id.toString() != id)
+        return next(new Error('Missing permissions to delete', {cause: 400}))
+
+    res.status(200).json({message: "user data", user})
+}
+
+export const viewUser = async (req, res, next) =>
+{
+    const {id} = req.params
+
+    const user = await User.findById(id)
+    if (!user)
+        return next(new Error('Invalid id', {cause: 404}))
+    
+    const profile = {}
+    profile.userName = user.userName
+    profile.dateOfBirth = user.dateOfBirth
+    profile.role = user.role
+    profile.status = user.status
+    profile.techSkills = user.techSkills
+    profile.softSkills = user.softSkills
+
+    res.status(200).json({message: "user profile", profile})
+}
+
+
+
+export const getAllRecovery = async (req, res, next) =>
+{
+    const {recoveryEmail} = req.body
+    const users = await User.find({recoveryEmail})
+
+    res.status(200).json({message: `list of users with recovery email ${recoveryEmail}`, users})
+}
