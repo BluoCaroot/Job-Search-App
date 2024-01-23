@@ -30,7 +30,7 @@ const companySchema = new Schema(
         Enum: ["less than 10", "11-20", "21-50", "50+"],
         required: true
     },
-    Email:
+    email:
     {
         type: String,
         required: true,
