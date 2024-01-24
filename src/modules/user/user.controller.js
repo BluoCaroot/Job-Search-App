@@ -127,7 +127,7 @@ export const getUserData = async (req, res, next) =>
     const {id} = req.params
 
     if (user._id.toString() != id)
-        return next(new Error('Missing permissions to delete', {cause: 400}))
+        return next(new Error('Missing permissions to get data', {cause: 400}))
 
     res.status(200).json({message: "user data", user})
 }

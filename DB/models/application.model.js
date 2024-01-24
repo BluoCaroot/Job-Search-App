@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose"
-import { skillsSchema } from "./helper"
+import { skillsSchema } from "./helper.js"
 
 const applicationSchema = new Schema(
 {
@@ -19,7 +19,9 @@ const applicationSchema = new Schema(
     {
         type: String,
         required: true
-    }
+    },
+    techSkills: [skillsSchema],
+    softSkills: [skillsSchema]
 }, {timestamps: true})
 
 export default model('application', applicationSchema)

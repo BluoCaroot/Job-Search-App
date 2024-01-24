@@ -33,6 +33,12 @@ const jobSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'user',
         required: true
+    },
+    company:
+    {
+        type: Schema.Types.ObjectId,
+        ref: 'company',
+        required: true 
     }
 }, {timestamps: true})
 
