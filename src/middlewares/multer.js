@@ -3,9 +3,8 @@ import multer from "multer"
 import generateUniqueString from "../utils/generateUniqueString.js";
 import { allowedExtensions } from "../utils/allowedExtensions.js";
 
-import fs from 'fs' // built in module for handling file system
-import path from 'path' // built in module for handling path
-
+import fs from 'fs' 
+import path from 'path'
 
 /**
  * 
@@ -20,7 +19,7 @@ export const multerMiddleLocal = ({
     filePath = 'general'
 }) => {
 
-    const destinationPath = path.resolve(`src/uploads/${filePath}`) // return the full path till the src/uploads/${filePath}
+    const destinationPath = path.resolve(`src/uploads/${filePath}`) 
 
     // path check
     if (!fs.existsSync(destinationPath)) {
@@ -37,9 +36,7 @@ export const multerMiddleLocal = ({
         }
     })
 
-    // file Filter
     const fileFilter = (req, file, cb) => {
-        // console.log(file.mimetype);  // application/octet-stream 
         if (extensions.includes(file.mimetype.split('/')[1])) {
             return cb(null, true)
         }
@@ -67,7 +64,6 @@ export const multerMiddleHost = ({
 
     // file Filter
     const fileFilter = (req, file, cb) => {
-        // console.log(file.mimetype);  // application/octet-stream 
         if (extensions.includes(file.mimetype.split('/')[1])) {
             return cb(null, true)
         }

@@ -12,3 +12,17 @@ export const skillsSchema = new Schema(
         Enum: ['Beginner', 'Intermediate', 'Skilled']
     }
 })
+
+const resumeSchema = new Schema(
+    {
+        secure_url:
+        {
+            type: string,
+            required: true
+        },
+        public_id:
+        {
+            type: string,
+            required: true
+        }
+    })

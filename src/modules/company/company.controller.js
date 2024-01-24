@@ -48,6 +48,7 @@ export const updateCompany = async (req, res, next) =>
             return next(new Error('Company name already exists', {cause: 409}))
         company.name = name
     }
+    await company.save()
     res.status(200).json({message: "Edited company data"})
 }
 
@@ -101,6 +102,7 @@ export const getApplications = async (req, res, next) =>
         return next(new Error('Invalid company id', {cause: 404}))
     if (user._id.toString() != company.hr.toString())
         return next(new Error('Missing permissions to access applications', {cause: 400}))
+        
     const jobs = await Job.find({company: companyId})
     const applications = []
     for (const job of jobs)
