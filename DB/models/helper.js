@@ -13,16 +13,16 @@ export const skillsSchema = new Schema(
     }
 })
 
-const resumeSchema = new Schema(
+export const resumeSchema = new Schema(
     {
         secure_url:
         {
-            type: string,
+            type: String,
             required: true
         },
         public_id:
         {
-            type: string,
+            type: String,
             required: true
         }
     })

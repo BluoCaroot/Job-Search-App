@@ -14,6 +14,7 @@ router.patch('/password', auth(), /*validation(),*/ expressAsyncHandler(userCont
 router.get('/data/:id', auth(), /*validation(),*/ expressAsyncHandler(userController.getUserData))
 router.get('/profile/:id', /*validation(),*/ expressAsyncHandler(userController.viewUser))
 router.get('/recovery', /*validation(),*/ expressAsyncHandler(userController.getAllRecovery))
-//TODO: add otp API(s), validation
+router.patch('/forget', /*validation(),*/ expressAsyncHandler(userController.forgotPassword))
+//TODO: validation
 
 export default router

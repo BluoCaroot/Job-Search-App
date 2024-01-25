@@ -9,4 +9,4 @@ export const globalResponse = (err, req, res, next) =>
             errorMessage: err.message       
         })
     }
-}
+} 

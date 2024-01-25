@@ -11,7 +11,7 @@ const jobSchema = new Schema(
     location:
     {
         type: String,
-        Enum: ['onsite', 'remote', 'hybrid'],
+        Enum: ['onSite', 'remote', 'hybrid'],
         required: true
     },
     workTime:

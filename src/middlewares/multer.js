@@ -40,7 +40,7 @@ export const multerMiddleLocal = ({
         if (extensions.includes(file.mimetype.split('/')[1])) {
             return cb(null, true)
         }
-        cb(new Error('Image format is not allowed!'), false)
+        cb(new Error('File format is not allowed!'), false)
     }
 
 
@@ -49,9 +49,9 @@ export const multerMiddleLocal = ({
 }
 
 
-export const multerMiddleHost = ({
+export const multerMiddleHost = (
     extensions = allowedExtensions.image,
-}) => {
+) => {
 
 
     // diskStorage
@@ -64,10 +64,12 @@ export const multerMiddleHost = ({
 
     // file Filter
     const fileFilter = (req, file, cb) => {
+        console.log(file.mimetype)
+        console.log(extensions)
         if (extensions.includes(file.mimetype.split('/')[1])) {
             return cb(null, true)
         }
-        cb(new Error('Image format is not allowed!'), false)
+        cb(new Error('File format is not allowed!'), false)
     }
 
 

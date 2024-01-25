@@ -58,7 +58,8 @@ const userSchema = new Schema(
         default: 'offline'
     },
     techSkills: [skillsSchema],
-    softSkills: [skillsSchema]
+    softSkills: [skillsSchema],
+    secret: String
 }, {timestamps: true})
 
 

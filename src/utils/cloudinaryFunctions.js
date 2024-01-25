@@ -1,13 +1,13 @@
-import { cloudinaryConnection } from "./cloudinaryConnection"
+import { cloudinaryConnection } from "./cloudinaryConnection.js"
 
 
 
 
-export const upload = async (file) =>
+export const upload = async (path, file) =>
 {
     return await cloudinaryConnection().uploader.upload(file.path,
         {
-            folder: `uploads/${jobId}/applications/`,
+            folder: path,
             use_filename: true,
             unique_filename: true
         })

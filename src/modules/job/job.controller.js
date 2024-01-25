@@ -12,6 +12,8 @@ export const addJob = async (req, res, next) =>
     const isCompanyIdValid = await Company.findById(company)
     if (!isCompanyIdValid)
         return next(new Error("Invalid company id", {cause: 404}))
+    if (isCompanyIdValid.hr.toString() != user._id)
+         next(new Error("Missing permission to add jobs to this company", {cause: 400}))
 
     const job = await Job.create({title, location, workTime, seniorityLevel, techSkills, softSkills, company, addedBy: user._id})
 
@@ -35,6 +37,8 @@ export const updateJob = async (req, res, next) =>
         const isCompanyIdValid = await Company.findById(company)
         if (!isCompanyIdValid)
             return next(new Error("Invalid company id", {cause: 404}))
+        if (isCompanyIdValid.hr.toString() != user._id)
+            return next(new Error("Missing permission to add jobs to this company", {cause: 400}))
         job.company = company
     }
     job.title = title ? title : job.title
@@ -62,9 +66,8 @@ export const removeJob = async (req, res, next) =>
 
     const applications = await Application.find({jobId: id})
 
-    for (const application of applications)
-        Cloudinary.remove(application.userResume.public_id)
-    
+    await cloudinaryConnection().api.delete_resources_by_prefix(`uploads/${id}/applications/`)
+    await cloudinaryConnection().api.delete_folder(`uploads/${id}`)
     await Job.findByIdAndDelete(id)
     res.status(200).json({message: "Job deleted"})
 }
@@ -91,7 +94,8 @@ export const getCompanyJobs = async (req, res, next) =>
 
 export const filterJobs = async (req, res, next) =>
 {
-    const {workTime, location, seniorityLevel, title, techSkills} = req.body
+    const {workTime, location, seniorityLevel, title} = req.query
+    const {techSkills} = req.body
 
     if (!(workTime || location || seniorityLevel || title || techSkills || techSkills?.size))
         return next(new Error("Please select at least one filter", {cause: 400}))
@@ -119,14 +123,20 @@ export const filterJobs = async (req, res, next) =>
 export const applyToJob = async (req, res, next) =>
 {
     const {user} = req
-    const {jobId} = req.body
+    const {jobId} = req.params
     const {techSkills, softSkills} = user
 
     if (!req.file)
         return next(new Error("Please upload your resume", {cause: 400}))
+    const job = await Job.findById(jobId)
 
-    const { secure_url, public_id } = Cloudinary.upload(req.file)
+    if (!job)
+        return next(new Error("Invalid job id", {cause: 404}))
+
+    const { secure_url, public_id } = await Cloudinary.upload(`uploads/${jobId}/applications/`, req.file)
+    
     req.userResume = { secure_url, public_id } // incase of database error, the error handling middleware will catch the error and delete the files
+    
     const application = await Application.create({jobId, userId: user._id, userResume:req.userResume,
         techSkills, softSkills})
 

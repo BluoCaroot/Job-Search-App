@@ -1,7 +1,8 @@
-import User from '../../../DB/models/user.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import twoFactor from 'node-2fa'
 
+import User from '../../../DB/models/user.model.js'
 
 export const signUp = async (req, res, next) =>
 {
@@ -17,10 +18,17 @@ export const signUp = async (req, res, next) =>
         return next(new Error('Phone number already exists', {cause: 409}))
     
     const hashed = bcrypt.hashSync(password, +process.env.SALT_ROUNDS)
+    const userName = firstName + ' ' + lastName
+    const newSecret = twoFactor.generateSecret({ name: "Job Search App", account: userName });
 
-    const user = await User.create({firstName, lastName, userName: firstName + ' ' + lastName,
-        recoveryEmail, dateOfBirth, phoneNumber, email, password: hashed, role, techSkills, softSkills})
-    res.status(201).json({message: 'user signed up sucessfully', user})
+
+    const user = await User.create({firstName, lastName, userName ,
+        recoveryEmail, dateOfBirth, phoneNumber, email, password: hashed, role, techSkills, softSkills,
+        secret: newSecret.secret})
+    res.status(201).json({message: 'user signed up sucessfully',
+        note: "please scan this qr code or manually add the secret key to\
+ any 2fa service to be able to reset your password",
+        user, qrCode: newSecret.qr, secretKey: newSecret.secret})
 }
 
 export const signIn = async (req, res, next) =>
@@ -159,4 +167,19 @@ export const getAllRecovery = async (req, res, next) =>
     const users = await User.find({recoveryEmail})
 
     res.status(200).json({message: `list of users with recovery email ${recoveryEmail}`, users})
+}
+
+export const forgotPassword = async (req, res, next) =>
+{
+    const {token, email, newPassword} = req.body
+
+    const user = await User.findOne({email})
+    if (!user)
+        return next(new Error('Invalid email', {cause: 404}))
+    const isTokenCorrect = twoFactor.verifyToken(user.secret, token)
+    if (isTokenCorrect)
+        return next(new Error('Invalid token', {cause: 400}))
+    user.password = bcrypt.hashSync(newPassword, +process.env.SALT_ROUNDS)
+    await user.save()
+    res.status(200).json({message: "Password reset you may login now"})
 }
