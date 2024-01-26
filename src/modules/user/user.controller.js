@@ -61,7 +61,7 @@ export const signIn = async (req, res, next) =>
 export const updateUser = async (req, res, next) =>
 {
     const {user} = req
-    const {firstName, lastName, dateOfBirth, mobileNumber, email, id, recoveryEmail, password} = req.body
+    const {firstName, lastName, dateOfBirth, phoneNumber, email, id, recoveryEmail, password} = req.body
 
     if (user._id.toString() != id)
         return next(new Error('Missing permissions to edit', {cause: 400}))
@@ -77,12 +77,12 @@ export const updateUser = async (req, res, next) =>
             return next(new Error('Email already exists', {cause: 409}))
         user.email = email
     }
-    if (mobileNumber)
+    if (phoneNumber)
     {
-        const duplicateNumber = await User.findOne({mobileNumber})
+        const duplicateNumber = await User.findOne({phoneNumber})
         if (duplicateNumber)
             return next(new Error('Phone number already exists', {cause: 409}))
-            user.mobileNumber = mobileNumber
+            user.phoneNumber = phoneNumber
     }
     user.firstName = firstName ? firstName : user.firstName
     user.lastName = lastName ? lastName : user.lastName
