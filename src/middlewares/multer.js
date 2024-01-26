@@ -14,7 +14,8 @@ import { allowedExtensions } from "../utils/allowedExtensions.js";
  * create multer instance
  * return multer instance
  */
-export const multerMiddleLocal = ({
+export const multerMiddleLocal = (
+{
     extensions = allowedExtensions.image,
     filePath = 'general'
 }) => {
@@ -22,21 +23,25 @@ export const multerMiddleLocal = ({
     const destinationPath = path.resolve(`src/uploads/${filePath}`) 
 
     // path check
-    if (!fs.existsSync(destinationPath)) {
+    if (!fs.existsSync(destinationPath)) 
+    {
         fs.mkdirSync(destinationPath, { recursive: true })
     }
     // diskStorage
     const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
+        destination: function (req, file, cb) 
+        {
             cb(null, destinationPath)
         },
-        filename: (req, file, cb) => {
+        filename: (req, file, cb) => 
+        {
             const uniqueFileName = generateUniqueString(6) + '_' + file.originalname
             cb(null, uniqueFileName)
         }
     })
 
-    const fileFilter = (req, file, cb) => {
+    const fileFilter = (req, file, cb) => 
+    {
         if (extensions.includes(file.mimetype.split('/')[1])) {
             return cb(null, true)
         }
@@ -63,9 +68,8 @@ export const multerMiddleHost = (
     })
 
     // file Filter
-    const fileFilter = (req, file, cb) => {
-        console.log(file.mimetype)
-        console.log(extensions)
+    const fileFilter = (req, file, cb) => 
+    {
         if (extensions.includes(file.mimetype.split('/')[1])) {
             return cb(null, true)
         }
