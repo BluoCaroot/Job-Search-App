@@ -4,6 +4,13 @@ import Application from './../../../DB/models/application.model.js'
 import { cloudinaryConnection } from '../../utils/cloudinaryConnection.js'
 import * as Cloudinary from '../../utils/cloudinaryFunctions.js'
 
+/**
+ * 
+ * recieves key values of job to add in the request body
+ * checks for validity of company id and returns an error in case of invalidity or unauthorization
+ * otherwise creates a new job instance and returns it
+ */
+
 export const addJob = async (req, res, next) =>
 {
     const {user} = req
@@ -19,6 +26,13 @@ export const addJob = async (req, res, next) =>
 
     res.status(201).json({message: "Job listed", job})
 }
+
+/**
+ * 
+ * recieves key values to edit in the request body
+ * checks for duplication and invalidity of ids and authorization and returns an error in case of any problems
+ * otherwise edits the job as requested
+ */
 
 export const updateJob = async (req, res, next) =>
 {
@@ -51,7 +65,12 @@ export const updateJob = async (req, res, next) =>
     await job.save()
     res.status(200).json({message: "Job edited"})
 }
-
+/**
+ * 
+ * recieves id of job to delete in request params
+ * returns error in case of invalid id or unauthorization
+ * otherwise removes resumes related to the job from the host and deletes the job
+ */
 export const removeJob = async (req, res, next) =>
 {
     const {user} = req
@@ -71,14 +90,22 @@ export const removeJob = async (req, res, next) =>
     await Job.findByIdAndDelete(id)
     res.status(200).json({message: "Job deleted"})
 }
-
+/**
+ * 
+ * returns a list of jobs with their respictive companies 
+ */
 export const getJobsWithCompany = async (req, res, next) =>
 {
     const jobs = await Job.find().populate('company')
 
     res.status(200).json({message: "List of jobs", jobs})
 }
-
+/**
+ * 
+ * recieves company name in request query
+ * checks for validity of company name in case of invalidity returns an error
+ * otherwise returns a list of that company's jobs
+ */
 export const getCompanyJobs = async (req, res, next) =>
 {
     const {companyName} = req.query
@@ -91,7 +118,12 @@ export const getCompanyJobs = async (req, res, next) =>
 
     res.status(200).json({message: "List of jobs", jobs})
 }
-
+/**
+ * 
+ * recieves filters to search with in request query and body
+ * returns an error in case no filter is sent
+ * otherwise returns a list of jobs matching search criteria
+ */
 export const filterJobs = async (req, res, next) =>
 {
     const {workTime, location, seniorityLevel, title} = req.query
@@ -119,7 +151,12 @@ export const filterJobs = async (req, res, next) =>
 
     res.status(200).json({message: "Filtered list of jobs", jobs})
 }
-
+/**
+ * 
+ * recieves job id to apply to in request params
+ * in case no resume is uploaded or invalidity of id returns an error
+ * otherwise uploads resume to the host and creates a new application instance and returns it
+ */
 export const applyToJob = async (req, res, next) =>
 {
     const {user} = req

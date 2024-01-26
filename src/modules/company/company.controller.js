@@ -2,6 +2,15 @@ import Company from '../../../DB/models/company.model.js'
 import Job from '../../../DB/models/job.model.js'
 import Application from '../../../DB/models/application.model.js'
 
+
+/**
+ * 
+ * recieves key values for the company in the request body
+ * creates a new company instance and returns it in case of succes
+ * 
+ * in case of duplicate name or email returns an error
+ */
+
 export const addCompany = async (req, res, next) =>
 {
     const {user} = req
@@ -17,6 +26,14 @@ export const addCompany = async (req, res, next) =>
     res.status(201).json({message: 'Company created sucessfully', company})
 
 }
+
+/**
+ * 
+ * recieves key values to be edited in the request body
+ * checks for valid id and duplication of email and name
+ * 
+ * in case of duplication or invalidity returns an error
+ */
 
 export const updateCompany = async (req, res, next) =>
 {
@@ -51,7 +68,11 @@ export const updateCompany = async (req, res, next) =>
     await company.save()
     res.status(200).json({message: "Edited company data"})
 }
-
+/**
+ * 
+ * recieves id of company to delete in request params
+ * returns error in case of invalid id or unauthorization otherwise deletes company
+ */
 export const deleteCompany = async (req, res, next) =>
 {
     const {user} = req
@@ -66,7 +87,11 @@ export const deleteCompany = async (req, res, next) =>
     await Company.findByIdAndDelete(id)
     res.status(200).json({message: "Deleted company"})
 }
-
+/**
+ * 
+ * recieves id of company to get data in request params
+ * returns error in case of invalid id otherwise gets company data
+ */
 export const getCompanyData = async (req, res, next) =>
 {
     const {id} = req.params
@@ -78,7 +103,11 @@ export const getCompanyData = async (req, res, next) =>
     
     res.status(200).json({message: "company and it's jobs", company, jobs})
 }
-
+/**
+ * 
+ * recieves prefix to search with in request query
+ * returns companies matching search criteria
+ */
 export const searchForCompany = async (req, res, next) =>
 {
     const {prefix} = req.query
@@ -90,7 +119,11 @@ export const searchForCompany = async (req, res, next) =>
     res.status(200).json({message: "companies matching search criteria", companies})
 }
 
-
+/**
+ * 
+ * recieves id of company to get applications for in request query
+ * returns error in case of invalid id or unauthorization otherwise returns applications
+ */
 export const getApplications = async (req, res, next) =>
 {
     const {user} = req

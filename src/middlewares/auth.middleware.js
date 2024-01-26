@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+
 import User from '../../DB/models/user.model.js'
 import { systemRoles } from '../utils/systemRoles.js'
 

@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose"
+
 import { skillsSchema } from "./helper.js"
 
 const userSchema = new Schema(

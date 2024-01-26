@@ -1,10 +1,12 @@
 import { Router } from 'express'
+import expressAsyncHandler from 'express-async-handler'
+
 import { auth } from "../../middlewares/auth.middleware.js"
 import { validation } from "../../middlewares/validation.middleware.js"
-import expressAsyncHandler from 'express-async-handler'
 import * as companyController from './company.controller.js'
 import { systemRoles } from '../../utils/systemRoles.js'
 import * as companySchema from './company.validationSchema.js'
+
 const router = Router()
 
 

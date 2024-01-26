@@ -1,4 +1,6 @@
 import { Schema } from "mongoose"
+
+
 export const skillsSchema = new Schema(
 {
     title:
