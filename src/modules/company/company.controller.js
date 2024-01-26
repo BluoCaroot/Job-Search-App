@@ -37,14 +37,14 @@ export const updateCompany = async (req, res, next) =>
     if (email)
     {
         const duplicateEmail = await Company.findOne({email})
-        if (duplicateEmail)
+        if (duplicateEmail && duplicateEmail._id.toString() != id)
         return next(new Error('Email already exists', {cause: 409}))
         company.email = email
     }
     if (name)
     {
         const duplicateName = await Company.findOne({name})
-        if (duplicateName)
+        if (duplicateName && duplicateName._id.toString() != id)
             return next(new Error('Company name already exists', {cause: 409}))
         company.name = name
     }

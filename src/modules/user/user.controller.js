@@ -73,14 +73,14 @@ export const updateUser = async (req, res, next) =>
     if (email)
     {
         const duplicateEmail = await User.findOne({email})
-        if (duplicateEmail)
+        if (duplicateEmail && duplicateEmail._id.toString() != id)
             return next(new Error('Email already exists', {cause: 409}))
         user.email = email
     }
     if (phoneNumber)
     {
         const duplicateNumber = await User.findOne({phoneNumber})
-        if (duplicateNumber)
+        if (duplicateNumber && duplicateNumber._id.toString() != id)
             return next(new Error('Phone number already exists', {cause: 409}))
             user.phoneNumber = phoneNumber
     }

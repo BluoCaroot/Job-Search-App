@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-
+import Joi from 'joi'
 
 export const objectId = (value) => 
 {
@@ -9,3 +9,9 @@ export const objectId = (value) =>
     }
     return value;
 }
+
+export const skillsSchema = Joi.object(
+{
+    title: Joi.string(),
+    experience: Joi.string().valid('Beginner', 'Intermediate', 'Skilled')
+}).required()
