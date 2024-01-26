@@ -1,10 +1,5 @@
 import joi from 'joi'
 
-const constants = 
-{
-    roles: joi.string().valid('user', 'hr'),
-
-}
 
 export const signUpSchema = {
     body: joi.object(
@@ -15,9 +10,9 @@ export const signUpSchema = {
         recoveryEmail: joi.string().email(),  
         password: joi.string().required(),
         confirmPassword: joi.string().valid(joi.ref('password')),
-        role:,
-        techSkills:,
-        softSkills:,
+        role: joi.string().valid('user', 'hr'),
+        techSkills: joi.array(),
+        softSkills: joi.array(),
 
     })
     .with('password', 'confirmPassword')

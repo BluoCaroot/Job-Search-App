@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
 import User from '../../DB/models/user.model.js'
+import { systemRoles } from '../utils/systemRoles.js'
 
-export const auth = ()=>
+export const auth = (accessRoles = [systemRoles.HR, systemRoles.USER])=>
 {
     return (async (req, res, next) =>
     {
@@ -23,7 +24,8 @@ export const auth = ()=>
             const user = await User.findById(decodedData.id)
             if (!user)
                 return next(new Error('user not found', {cause: 404}))
-
+            if (!accessRoles.includes(user.role))
+                return next(new Error('unauthorized', { cause: 401 }))
             req.user = user
             next()
         }
