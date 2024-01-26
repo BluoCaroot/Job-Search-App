@@ -25,7 +25,7 @@ export const signUp = async (req, res, next) =>
     
     const hashed = bcrypt.hashSync(password, +process.env.SALT_ROUNDS)
     const userName = firstName + ' ' + lastName
-    const newSecret = twoFactor.generateSecret({ name: "Job Search App", account: userName });
+    const newSecret = twoFactor.generateSecret({ name: "Job Search App", account: email });
 
 
     const user = await User.create({firstName, lastName, userName ,
