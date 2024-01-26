@@ -21,7 +21,7 @@ const keys =
     confirmPassword: joi.string().valid(joi.ref('password')),
     role: joi.string().valid('user', 'hr'),
     skills: joi.array(),
-    phoneNumber: joi.string().min(7).max(15),
+    phoneNumber: joi.string().min(8).max(16),
     dateOfBirth: joi.custom(customDateValidator),
     id: joi.string().custom(validation.objectId)
 }
