@@ -133,4 +133,3 @@ dist
 *.env
 src/utils/nodeMailer.js
 
-.vscode/
