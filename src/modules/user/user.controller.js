@@ -223,9 +223,10 @@ export const forgotPassword = async (req, res, next) =>
     const user = await User.findOne({email})
     if (!user)
         return next(new Error('Invalid email', {cause: 404}))
-    const isTokenCorrect = twoFactor.verifyToken(user.secret, token)
-    if (isTokenCorrect)
+    const isTokenCorrect = twoFactor.verifyToken(user.secret, token.toString())
+    if (!isTokenCorrect || isTokenCorrect.delta != 0)
         return next(new Error('Invalid token', {cause: 400}))
+    
     user.password = bcrypt.hashSync(newPassword, +process.env.SALT_ROUNDS)
     await user.save()
     res.status(200).json({message: "Password reset you may login now"})
